@@ -68,7 +68,7 @@ const Signup = () => {
 
         } catch (err: any) {
             console.error(err.message);
-            setError(err.message || 'An error occurred during login.');
+            setError(err.message || 'An error occurred during signup.');
             setIsError(true);
         }
     }

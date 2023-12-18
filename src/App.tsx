@@ -6,7 +6,7 @@ import Signup from './components/Auth/Signup/Signup';
 import Home from './components/Home/Home';
 import Post from './components/Post/Post';
 import PostDetail from './components/Post/PostDetail/PostDetail';
-import isAuth from './components/Auth/isAuth';
+import isAuth from './components/Auth/isAuth/isAuth';
 
 const AuthenticatedPost = isAuth(Post);
 const AuthenticatedPostDetail = isAuth(PostDetail);

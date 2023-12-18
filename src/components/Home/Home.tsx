@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState} from 'react'
 import Post from '../Post/Post'
 import Button from '@mui/material/Button';
 import { useSelector } from 'react-redux';
@@ -23,7 +23,9 @@ const Home = () => {
     const navigate = useNavigate()
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated)
     const [open, setOpen] = React.useState(false);
+    const [isError, setIsError] = useState<boolean>(false)
 
+    const [error, setError] = useState<string | null>(null);
 
     const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
@@ -39,7 +41,13 @@ const Home = () => {
         }
     };
 
+    const handleError = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
 
+        setIsError(false);
+    };
     const handleLogout = async () => {
         try {
             await signOut(auth).then((user) => {
@@ -47,9 +55,10 @@ const Home = () => {
             })
 
 
-        } catch (err) {
-            console.log(err)
-        }
+        } catch (err:any) {
+            console.error(err.message);
+            setError(err.message || 'An error occurred during signup.');
+            setIsError(true);        }
     }
     return (
         <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
@@ -61,6 +70,11 @@ const Home = () => {
             <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
                 <Alert severity="info" onClose={handleClose} sx={{ width: '100%' }}>
                     You are logout! Redirecting to login page.                </Alert>
+            </Snackbar>
+            <Snackbar open={isError} autoHideDuration={2000} onClose={handleError}>
+                <Alert onClose={handleError} severity="error" sx={{ width: '100%' }}>
+                    {error}
+                </Alert>
             </Snackbar>
         </div>
     )

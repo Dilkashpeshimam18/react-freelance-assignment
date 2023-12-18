@@ -1,7 +1,6 @@
-import React from 'react'
 import AllPost from './AllPost/AllPost'
 
-const Post = () => {
+ const Post = () => {
     return (
         <>
             <AllPost />

@@ -3,11 +3,39 @@ import Button from '@mui/material/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../../firebase/firebase';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+    props,
+    ref,
+) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 const Signup = () => {
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const navigate = useNavigate()
+    const [open, setOpen] = React.useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [isError, setIsError] = useState<boolean>(false)
+
+    const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+        navigate('/login');
+    };
+    const handleError = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setIsError(false);
+    };
+
 
     const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value)
@@ -19,24 +47,29 @@ const Signup = () => {
     const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         try {
+            setError(null);
 
+            if (!email || !password) {
+                throw new Error('Email and password are required.');
+            }
+            if (password.length < 6) {
+                throw new Error('Password must be at least 6 characters long.');
+            }
             const userCredential = await createUserWithEmailAndPassword(auth, email, password)
                 .then(async (userCredential) => {
 
                     setEmail('')
                     setPassword('')
-                    alert('Signup Successful!')
-                    navigate('/login')
+                    setOpen(true)
                 })
                 .catch((err) => {
                     console.log(err)
                 })
 
-
-
-        } catch (err) {
-            console.log(err)
-            alert(err)
+        } catch (err: any) {
+            console.error(err.message);
+            setError(err.message || 'An error occurred during login.');
+            setIsError(true);
         }
     }
     return (
@@ -62,6 +95,16 @@ const Signup = () => {
 
                 </div>
             </div>
+            <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                    Signup successful!
+                </Alert>
+            </Snackbar>
+            <Snackbar open={isError} autoHideDuration={2000} onClose={handleError}>
+                <Alert onClose={handleError} severity="error" sx={{ width: '100%' }}>
+                    {error}
+                </Alert>
+            </Snackbar>
 
         </div>)
 }

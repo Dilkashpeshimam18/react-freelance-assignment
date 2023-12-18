@@ -9,6 +9,7 @@ import Avatar from '@mui/material/Avatar';
 import './PostDetail.css'
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
 
 //material ui toast component
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
@@ -30,6 +31,7 @@ const PostDetail = () => {
     const { postId } = useParams()
     const [open, setOpen] = React.useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
 
     const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
@@ -44,47 +46,56 @@ const PostDetail = () => {
             const response = await axios.get(`https://jsonplaceholder.typicode.com/posts/${postId}`)
             if (response.status === 200) {
                 setPost(response.data);
-              } else {
+            } else {
                 setError(`Unexpected response status: ${response.status}`);
-              }
-        } catch (err:any) {
+            }
+        } catch (err: any) {
             console.log(err)
             if (axios.isAxiosError(err)) {
                 setError(`Axios error: ${err.message}`);
-            
-              } else {
+
+            } else {
                 setError(`Unexpected error: ${err.message}`);
-              }
-              setOpen(true)
+            }
+            setOpen(true)
+        } finally {
+            setLoading(false);
         }
     }
     useEffect(() => {
+        setLoading(true);
+
         getSinglePost()
     }, [postId])
     return (
         <div className='postDetail'>
-            <Card sx={{ maxWidth: 345,height:'380px' }}>
-                <CardActionArea>
-                    <div style={{display:'flex',justifyContent:'center'}}>
-                    <Avatar sx={{width:"150px",height:'150px'}} alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+            {loading ? (
+                <CircularProgress sx={{ marginTop: '10px' }} />
+            ) : (<>
+                <Card sx={{ maxWidth: 345, height: '380px' }}>
+                    <CardActionArea>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <Avatar sx={{ width: "150px", height: '150px' }} alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
 
-                    </div>
+                        </div>
 
-                    <CardContent>
-                        <Typography gutterBottom variant="h5" component="div">
-                            {(post as PostProps).title}          </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            {(post as PostProps).body}
-                        </Typography>
-                    </CardContent>
-                </CardActionArea>
-            </Card>
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="div">
+                                {(post as PostProps).title}          </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {(post as PostProps).body}
+                            </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                </Card>
 
-            <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-                    {error}
-                </Alert>
-            </Snackbar>
+                <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+                        {error}
+                    </Alert>
+                </Snackbar>
+            </>)}
+
         </div>
     )
 }

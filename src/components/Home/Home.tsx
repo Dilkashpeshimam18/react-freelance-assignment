@@ -36,7 +36,7 @@ const Home = () => {
             }
 
             {isAuthenticated?<Post />:<div style={{display:'flex',justifyContent:'center',}}><h3>You need to login to see all post.</h3></div>}
-            
+
         </div>
     )
 }

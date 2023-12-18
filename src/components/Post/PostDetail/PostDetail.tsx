@@ -10,12 +10,14 @@ import './PostDetail.css'
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
+//material ui toast component
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
     ref,
 ) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+//defining post type
 type PostProps = {
     id: number,
     userId: number,
@@ -38,6 +40,7 @@ const PostDetail = () => {
     };
     const getSinglePost = async () => {
         try {
+            //get post detail with error handling 
             const response = await axios.get(`https://jsonplaceholder.typicode.com/posts/${postId}`)
             if (response.status === 200) {
                 setPost(response.data);

@@ -30,11 +30,13 @@ const AllPost = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [loading, setLoading] = useState(true);
 
+    //logic for implementing pagination
     const ItemsPerPage: number = 20;
 
     const startIndex: number = (currentPage - 1) * ItemsPerPage;
     const endIndex: number = startIndex + ItemsPerPage;
     const currentItems: AllPostProps[] = allPost.slice(startIndex, endIndex);
+
     const [open, setOpen] = React.useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -51,6 +53,7 @@ const AllPost = () => {
 
     const getAllPost = async () => {
         try {
+            //getting all post & storing it in state variable
             const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
 
             if (response.status === 200) {
@@ -59,6 +62,7 @@ const AllPost = () => {
                 setError(`Unexpected response status: ${response.status}`);
             }
         } catch (err: any) {
+            //error handling
             if (axios.isAxiosError(err)) {
                 setError(`Axios error: ${err.message}`);
             } else if (err instanceof Error) {
@@ -73,12 +77,14 @@ const AllPost = () => {
     }
 
     useEffect(() => {
+        //fetching all post when the component get rendered & when the page is change
         setLoading(true);
 
         getAllPost()
     }, [currentPage])
     return (
         <div className='post'>
+            {/* showing spinner if the data is not fetching else showing all post */}
             {loading ? (
                 <CircularProgress sx={{marginTop:'10px'}} />
             ) : (

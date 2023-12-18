@@ -51,10 +51,12 @@ const Signup = () => {
 
             if (!email || !password) {
                 throw new Error('Email and password are required.');
-            }
+            }//validation
             if (password.length < 6) {
                 throw new Error('Password must be at least 6 characters long.');
             }
+
+            //firebase auth for signup
             const userCredential = await createUserWithEmailAndPassword(auth, email, password)
                 .then(async (userCredential) => {
 
@@ -67,6 +69,7 @@ const Signup = () => {
                 })
 
         } catch (err: any) {
+            //error handling
             console.error(err.message);
             setError(err.message || 'An error occurred during signup.');
             setIsError(true);

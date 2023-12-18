@@ -34,6 +34,7 @@ const Home = () => {
 
         setOpen(false);
         if (isAuthenticated) {
+            //dispatching action & navigation to login after toast message
             dispatch(authActions.removeUserDetail());
             localStorage.removeItem('userEmail');
             localStorage.removeItem('userUID');
@@ -50,6 +51,7 @@ const Home = () => {
     };
     const handleLogout = async () => {
         try {
+            //firebase auth for logout
             await signOut(auth).then((user) => {
                 setOpen(true)
             })
@@ -62,9 +64,11 @@ const Home = () => {
     }
     return (
         <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+            {/* showing login/logout button on user auth state */}
             {isAuthenticated ? <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '10px' }}><Button sx={{ width: '150px' }} onClick={handleLogout} variant="contained">Logout</Button></div> :
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '10px' }}> <Link to='/login'> <Button sx={{ width: '150px' }} variant="contained">Login</Button></Link></div>
             }
+            {/* showing post on user auth state */}
 
             {isAuthenticated ? <Post /> : <div style={{ display: 'flex', justifyContent: 'center', }}><h3>You need to login to see all post.</h3></div>}
             <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>

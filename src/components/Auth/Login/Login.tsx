@@ -7,6 +7,8 @@ import Button from '@mui/material/Button';
 import { useDispatch } from 'react-redux';
 import { authActions } from '../../../store/slice/authSlice';
 
+
+//material UI toast 
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
@@ -31,7 +33,7 @@ const Login = () => {
         if (reason === 'clickaway') {
             return;
         }
-
+        //for closing toast notification
         setOpen(false);
     };
 
@@ -50,10 +52,12 @@ const Login = () => {
 
             if (!email || !password) {
                 throw new Error('Email and password are required.');
-            }
+            } //validation
             if (password.length < 6) {
                 throw new Error('Password must be at least 6 characters long.');
             }
+
+            //firebase authentication for login
             await signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     let userDetail = {
@@ -61,6 +65,7 @@ const Login = () => {
                         uid: userCredential.user.uid
                     }
 
+                    //dispatching user detail in redux store & storing it in local storage
                     dispatch(authActions.addUserDetail(userDetail))
                     localStorage.setItem('userEmail', userCredential.user.email as string)
                     localStorage.setItem('userUID', userCredential.user.uid as string)

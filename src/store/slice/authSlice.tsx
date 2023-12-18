@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-
+//slice for handling user state
 export type AuthType = {
     isAuthenticated: boolean,
     user: {

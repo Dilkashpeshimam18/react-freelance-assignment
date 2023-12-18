@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React, { useState } from 'react'
 import Button from '@mui/material/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth'
@@ -7,7 +7,7 @@ import { auth } from '../../../firebase/firebase';
 const Signup = () => {
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
-    const navigate=useNavigate()
+    const navigate = useNavigate()
 
     const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value)
@@ -16,13 +16,13 @@ const Signup = () => {
         setPassword(e.target.value)
     }
 
-    const handleSignUp=async(e: React.FormEvent<HTMLFormElement>)=>{
+    const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         try {
 
             const userCredential = await createUserWithEmailAndPassword(auth, email, password)
                 .then(async (userCredential) => {
-                
+
                     setEmail('')
                     setPassword('')
                     alert('Signup Successful!')
@@ -39,20 +39,20 @@ const Signup = () => {
             alert(err)
         }
     }
-  return (
-    <div>
+    return (
+        <div>
             <div className='login__container'>
                 <div className='login__subContainer'>
                     <form onSubmit={handleSignUp} >
                         <h2>SIGN UP</h2>
-                     
+
                         <div className='login__inputContainer'>
                             <h3 className='login__subTitle'>Email</h3>
-                            <input className='login__input' type='email' value={email} onChange={(e) => setEmail(e.target.value)} />
+                            <input className='login__input' type='email' value={email} onChange={handleEmail} />
                         </div>
                         <div className='login__inputContainer'>
                             <h3 className='login__subTitle'>Password</h3>
-                            <input className='login__input' type='password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                            <input className='login__input' type='password' value={password} onChange={handlePassword} />
                         </div>
                         <Button type='submit' className='login__button' variant="contained">Signup</Button>                    </form>
                     <div className='login__link'>
@@ -63,7 +63,7 @@ const Signup = () => {
                 </div>
             </div>
 
-        </div>  )
+        </div>)
 }
 
 export default Signup

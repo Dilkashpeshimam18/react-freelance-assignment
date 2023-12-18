@@ -4,11 +4,15 @@ import { signInWithEmailAndPassword} from 'firebase/auth'
 import { auth } from '../../../firebase/firebase';
 import './Login.css'
 import Button from '@mui/material/Button';
+import { useDispatch } from 'react-redux';
+import { authActions } from '../../../store/slice/authSlice';
+
 
 const Login = () => {
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const navigate = useNavigate()
+    const dispatch=useDispatch()
 
     const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value)
@@ -23,16 +27,12 @@ const Login = () => {
             await signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     let userDetail = {
-                        name: userCredential.user.displayName,
                         email: userCredential.user.email,
-                        photoUrl: userCredential.user.photoURL,
-                        bio: '',
                         uid: userCredential.user.uid
-
                     }
-                    localStorage.setItem('userName', userCredential.user.displayName as string)
+
+                    dispatch(authActions.addUserDetail(userDetail))
                     localStorage.setItem('userEmail', userCredential.user.email as string)
-                    localStorage.setItem('userPhotoUrl', userCredential.user.photoURL as string)
                     localStorage.setItem('userUID', userCredential.user.uid as string)
 
                     setEmail('')
@@ -55,11 +55,11 @@ const Login = () => {
                     <h2>Login</h2>
                     <div className='login__inputContainer'>
                         <h3 className='login__subTitle'>Email</h3>
-                        <input className='login__input' type='email' value={email} onChange={(e) => setEmail(e.target.value)} />
+                        <input className='login__input' type='email' value={email} onChange={handleEmail} />
                     </div>
                     <div className='login__inputContainer'>
                         <h3 className='login__subTitle'>Password</h3>
-                        <input className='login__input' type='password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <input className='login__input' type='password' value={password} onChange={handlePassword} />
                     </div>
                     <Button type='submit' className='login__button'  variant="contained">Login</Button>  
                                       </form>

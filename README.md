@@ -1,5 +1,5 @@
 Built using React, Typescript, Redux, Firebase & Material UI.
-With advanced features, error handling, validation, best practices, well organised & commented code.
+With advanced features, error handling, validation & best practices And well organised & commented code.
 
 ## How to Run Locally
 
